@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8" />
+  <title>Leaflet тест без API key</title>
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="map"></div>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <script>
+    // 1. Създаваме картата
+    const map = L.map('map').setView([42.75, 25.35], 13);
+
+    // 2. OpenStreetMap tiles (без API key)
+   // Сателит
+const satellite = L.tileLayer(
+  'https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=32bnV8AI52KY6xXySPs9',
+  { maxZoom: 20 }
+);
+
+// Надписи
+const labels = L.tileLayer(
+  'https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.png?key=32bnV8AI52KY6xXySPs9',
+  { maxZoom: 20 }
+);
+
+// Добавяш и двете
+satellite.addTo(map);
+labels.addTo(map);
+    // 3. Примерни пинове
+    L.marker([42.751, 25.351])
+      .addTo(map)
+      .bindPopup('<b>Хранилка 1</b><br>Последно зареждане: 12.01');
+
+    L.marker([42.745, 25.345])
+      .addTo(map)
+      .bindPopup('<b>Чакало 2</b><br>Посока: Север');
+
+    // 4. Клик върху картата → показва координати
+    map.on('click', function(e) {
+      alert(`Координати:\n${e.latlng.lat}, ${e.latlng.lng}`);
+    });
+  </script>
+
+</body>
+</html>
