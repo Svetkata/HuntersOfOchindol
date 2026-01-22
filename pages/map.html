@@ -1,68 +1,183 @@
 <!DOCTYPE html>
 <html lang="bg">
+
 <head>
-  <meta charset="UTF-8" />
-  <title>Leaflet тест без API key</title>
+    <meta charset="UTF-8" />
+    <title>Leaflet тест без API key</title>
 
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
 
-    #map {
-      height: 100vh;
-      width: 100%;
-    }
-  </style>
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
 </head>
+
 <body>
 
-  <div id="map"></div>
+    <div id="map"></div>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <script>
-    // 1. Създаваме картата
-    const map = L.map('map').setView([42.75, 25.35], 13);
+    <script>
+        // 1. Създаваме картата
+        const map = L.map('map').setView([43.10603513952499, 23.478807032508872], 10);
 
-    // 2. OpenStreetMap tiles (без API key)
-   // Сателит
-const satellite = L.tileLayer(
-  'https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=32bnV8AI52KY6xXySPs9',
-  { maxZoom: 20 }
-);
+        // 2. OpenStreetMap tiles (без API key)
+        // Сателит
+        const satellite = L.tileLayer(
+            'https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=32bnV8AI52KY6xXySPs9',
+            { maxZoom: 20 }
+        );
 
-// Надписи
-const labels = L.tileLayer(
-  'https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.png?key=32bnV8AI52KY6xXySPs9',
-  { maxZoom: 20 }
-);
+        // Надписи
+        const labels = L.tileLayer(
+            'https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.png?key=32bnV8AI52KY6xXySPs9',
+            { maxZoom: 20 }
+        );
+        map.setMinZoom(14);
+        map.setMaxZoom(20);
+        const bboxCoords = [
+            [43.112699291439794, 23.459144105172925],
+            [43.095159555334545, 23.459144105172925],
+            [43.095159555334545, 23.50052995420907],
+            [43.112699291439794, 23.50052995420907],
+            [43.112699291439794, 23.459144105172925]
+        ];
+        const bboxPolygon = L.polygon(bboxCoords);
 
-// Добавяш и двете
-satellite.addTo(map);
-labels.addTo(map);
-    // 3. Примерни пинове
-    L.marker([42.751, 25.351])
-      .addTo(map)
-      .bindPopup('<b>Хранилка 1</b><br>Последно зареждане: 12.01');
+        // Вземаме границите
+        const bbox = bboxPolygon.getBounds();
 
-    L.marker([42.745, 25.345])
-      .addTo(map)
-      .bindPopup('<b>Чакало 2</b><br>Посока: Север');
+        // Ограничаваме картата само в този box
+        map.setMaxBounds(bbox);
 
-    // 4. Клик върху картата → показва координати
-    map.on('click', function(e) {
-      alert(`Координати:\n${e.latlng.lat}, ${e.latlng.lng}`);
-    });
-  </script>
+        // Центрираме и zoom-ваш в box
+        map.fitBounds(bbox);
+
+        // Добавяш и двете
+        satellite.addTo(map);
+        labels.addTo(map);
+        // 3. Примерни пинове
+        L.marker([43.10282673396441, 23.479979196980874])
+            .addTo(map)
+            .bindPopup(
+                `<b>Гатер с диви прасета (Тренировъчен терен за кучета)</b><br>
+     Последно зареждане: 12.01 с царевица<br><br>
+     <img src="/images/Gater.jpg" alt="Гатер" style="width: 120px; height: auto; display:block; margin-top:8px;" />`
+            );
+
+
+        L.marker([43.10577849279052, 23.476086541371714])
+            .addTo(map)
+            .bindPopup('<b>Начален пункт за събиране на ловците.</b><br>Събота и Неделя в 07:30 <img src="/images/Centre.png"style="width: 150px; height: auto; display:block; margin-top:8px;" />`');
+
+        L.marker([43.10526814207592, 23.480018498999495])
+            .addTo(map)
+            .bindPopup('<b>Сборен пункт "Корицетто"</b><br> Има постоянна течаща вода. <img src="/images/Korittseto.jpg" alt="Гатер" style="width: 150px; height: auto; display:block; margin-top:8px;" />`');
+
+        L.marker([43.10493129788484, 23.477817941059403])
+            .addTo(map)
+            .bindPopup(
+                `<b><b>Младешки еколагер</b><br>Място за престой на ловци(гости)'
+     <img src="/images/EkoLager.jpg" alt="Гатер" style="width: 150px; height: auto; display:block; margin-top:8px;" />`
+            );
+
+        L.marker([43.10646875746736, 23.476209564831038])
+            .addTo(map)
+            .bindPopup('<b>Сборен пункт "Горния кладенец"</b><br>Има постоянна течаща вода.');
+
+        L.marker([43.102339988356405, 23.464228032850123])
+            .addTo(map)
+            .bindPopup('<b>Сборен пункт "Рачова ливада"<img src="/images/Furgona.jpg" alt="Гатер" style="width: 150px; height: auto; display:block; margin-top:8px;" />`');
+
+        L.marker([43.11304672027798, 23.497869655310904])
+            .addTo(map)
+            .bindPopup('<b>Сборен пункт "Реката"<img src="/images/Rekata.jpg" alt="Гатер" style="width: 150px; height: auto; display:block; margin-top:8px;" />`');
+
+        L.marker([43.09867100316694, 23.471475282966036])
+            .addTo(map)
+            .bindPopup('<b>Сборен пункт "Издегла"<img src="/images/Izdegla.jpg" alt="Гатер" style="width: 150px; height: auto; display:block; margin-top:8px;" />`');
+
+        // 4. Клик върху картата → показва координати
+        map.on('click', function (e) {
+            alert(`Координати:\n${e.latlng.lat}, ${e.latlng.lng}`);
+        });
+        const lovenRegion = L.polygon([
+            [43.114856901598586, 23.466067167312133],
+            [43.11377115884926, 23.46340021992316],
+            [43.112086347480925, 23.46201545877861],
+            [43.109016127499586, 23.4623744709273],
+            [43.10605808697815, 23.462887345424434],
+            [43.10354925704223, 23.46340021992316],
+            [43.10122756162636, 23.463759232071794],
+            [43.0989432269852, 23.4638618069703],
+            [43.097145657842816, 23.464477256369065],
+            [43.09628430392752, 23.464836268516166],
+            [43.09474881689789, 23.46909312684977],
+            [43.094636462676846, 23.471503636990207],
+            [43.094636462676846, 23.47345256008191],
+            [43.09482371959726, 23.475709207872228],
+            [43.09531058491183, 23.478991604659996],
+            [43.09531058491183, 23.481196965000294],
+            [43.095385486924044, 23.484120349637863],
+            [43.09549783977087, 23.48663343467834],
+            [43.09549783977087, 23.489967118914592],
+            [43.095647643246224, 23.492839216103675],
+            [43.09733290709042, 23.495813888191293],
+            [43.09879343157209, 23.49817311088168],
+            [43.10029136921119, 23.499404009676113],
+            [43.103062457233904, 23.5002758963235],
+            [43.10542152792317, 23.500993920620772],
+            [43.107930281129285, 23.501558082567954],
+            [43.109502879964964, 23.50191709471656],
+            [43.111300086302464, 23.50242996921375],
+            [43.11276027759391, 23.502788981362414],
+            [43.1146322667482, 23.50242996921375],
+            [43.115680555662124, 23.502019669615095],
+            [43.11650419864023, 23.501506795117905],
+            [43.11714064243921, 23.500070746523363],
+            [43.11747758059386, 23.49827568578175],
+            [43.11762733028948, 23.49612161288988],
+            [43.117739642320544, 23.492582778853546],
+            [43.117664767655725, 23.491095442810547],
+            [43.11758989289979, 23.489095232268795],
+            [43.117365268081784, 23.487607896224176],
+            [43.117365268081784, 23.485710260582493],
+            [43.1165416366936, 23.48417163708791],
+            [43.11616725512579, 23.48283816339341],
+            [43.116017501857016, 23.481248252450314],
+            [43.11639188434154, 23.479555766607206],
+            [43.11687857814715, 23.477299118816887],
+            [43.11687857814715, 23.475811782772325],
+            [43.11691601597147, 23.474427021627776],
+            [43.11699089155249, 23.472529385986064],
+            [43.116841140299385, 23.470324025644203],
+            [43.116017501857016, 23.469965013495596],
+            [43.115455923835185, 23.468785402151155],
+            [43.11519385232805, 23.467349353556614],
+            [43.114856901598586, 23.466067167312133]
+        ], {
+            color: '#d6bd1a',
+
+            fillOpacity: 0.2
+        }).addTo(map);
+
+        lovenRegion.bindPopup(
+            '<b>Ловен район – с. Очин дол</b>'
+        );
+
+    </script>
 
 </body>
+
 </html>
